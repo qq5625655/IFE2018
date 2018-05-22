@@ -55,7 +55,6 @@
         var hourSelect = document.getElementById('hour-select');
         var minuteSelect = document.getElementById('minute-select');
         var secondSelect = document.getElementById('second-select');
-        var selectArray = [yearSelect, monthSelect, daySelect, hourSelect, minuteSelect, secondSelect];
 
         var date = new Date();
         init();
@@ -91,8 +90,8 @@
             var formatDay = '';
 
             body.addEventListener('change', function (e) {
-                if (e.target.id === 'month-select') {
-
+                if (e.target.id === 'month-select' || e.target.id === 'year-select') {
+                    monthValue = selectValue(monthSelect);
                     if (monthValue === '2') {
                         if (leapYear()) {
                             renderDay(daySelect, 29, true);
@@ -106,7 +105,7 @@
                     }
                 }
                 yearValue = selectValue(yearSelect);
-                monthValue = selectValue(monthSelect);
+                // monthValue = selectValue(monthSelect);
                 dayValue = selectValue(daySelect);
                 hourValue = selectValue(hourSelect);
                 minuteValue = selectValue(minuteSelect);
