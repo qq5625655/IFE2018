@@ -56,6 +56,16 @@
         var minuteSelect = document.getElementById('minute-select');
         var secondSelect = document.getElementById('second-select');
 
+        var selectTime = '2015-01-01 00:00:00';
+        var currentDate = {
+            yearValue: '2010',
+            monthValue: '01',
+            dayValue: '01',
+            hourValue: '00',
+            minuteValue: '00',
+            secondValue: '00'
+        }
+
         var date = new Date();
         init();
 
@@ -72,7 +82,7 @@
             renderDay(hourSelect, 23, false);
             renderDay(minuteSelect, 59, false);
             renderDay(secondSelect, 59, false);
-            dateJudge('2015-01-01 00:00:00');
+            dateJudge();
         }
 
         function renderResult() {
@@ -85,7 +95,8 @@
             var hourValue = '';
             var minuteValue = '';
             var secondValue = '';
-            //转换后的时间
+
+            //转换后的时间格式
             var formatMonth = '';
             var formatDay = '';
 
@@ -104,30 +115,29 @@
                         renderDay(daySelect, 31, true);
                     }
                 }
-                yearValue = selectValue(yearSelect);
-                // monthValue = selectValue(monthSelect);
-                dayValue = selectValue(daySelect);
-                hourValue = selectValue(hourSelect);
-                minuteValue = selectValue(minuteSelect);
-                secondValue = selectValue(secondSelect);
-                //格式转换
-                formatMonth = format(monthValue);
-                formatDay = format(dayValue);
+                currentDate.yearValue = selectValue(yearSelect);
+                currentDate.monthValue = selectValue(monthSelect);
+                currentDate.dayValue = selectValue(daySelect);
+                currentDate.hourValue = selectValue(hourSelect);
+                currentDate.minuteValue = selectValue(minuteSelect);
+                currentDate.secondValue = selectValue(secondSelect);
+                // //格式转换
 
-                var selectTime = yearValue + '-' + formatMonth + '-' + formatDay +
-                    ' ' + hourValue + ':' + minuteValue + ':' + secondValue;
                 //判断时间
-                dateJudge(selectTime);
             });
-
-
-
         }
         //日期相减
-        function dateJudge(time) {
+        function dateJudge() {
             var resultWrapper = document.getElementById('result-wrapper');
-            var setData1 = Date.parse(time);
-            var setData2 = Date.parse('2018-05-20 21:10:23');
+            //连接时间
+            selectTime = currentDate.yearValue + '-' + currentDate.monthValue + '-' + currentDate.dayValue +
+                ' ' + currentDate.hourValue + ':' + currentDate.minuteValue + ':' + currentDate.secondValue;
+
+            var setData1 = Date.parse(selectTime);
+
+            // var setData2 = Date.parse('2018-05-20 21:10:23');
+
+            var setData2 = Date.parse(new Date());
 
             var Dayseconds = Math.abs(setData1 - setData2) / (24 * 3600 * 1000);
 
@@ -146,13 +156,17 @@
 
             seconds = parseInt(seconds);
             if (setData1 - setData2 > 0) {
-                resultWrapper.innerHTML = '距离2018年5月20日星期天 21:10:23已经过去:' +
+                resultWrapper.innerHTML = '距离' + currentDate.yearValue + '年' + currentDate.monthValue + '月' +
+                    currentDate.dayValue + '日' + currentDate.hourValue + '小时 ' + currentDate.minuteValue +
+                    '分钟' + currentDate.secondValue + '秒 还有:' +
                     Days + '天 ' + hours + '小时 ' + minutes + '分钟 ' + seconds + '秒 ';
             } else {
-                resultWrapper.innerHTML = '距离2018年5月20日星期天 21:10:23还有:' +
+                resultWrapper.innerHTML = '距离' + currentDate.yearValue + '年' + currentDate.monthValue + '月' +
+                    currentDate.dayValue + '日' + currentDate.hourValue + '小时 ' + currentDate.minuteValue +
+                    '分钟' + currentDate.secondValue + '秒 过去:' +
                     Days + '天 ' + hours + '小时 ' + minutes + '分钟 ' + seconds + '秒 ';
-
             }
+            setTimeout(dateJudge, 1000);
 
         }
         //判断闰年
@@ -181,7 +195,7 @@
                     text += '<option value=' + i + '>' + i + '</option>';
                 }
             } else {
-                for (var i = 0; i <= lastDay; i++) {
+                for (var i = 1; i <= lastDay; i++) {
                     i = format(i);
                     text += '<option value=' + i + '>' + i + '</option>';
                 }
