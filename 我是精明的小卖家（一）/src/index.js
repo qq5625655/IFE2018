@@ -1,5 +1,4 @@
-let sourceData = require('./data.js');
-console.log(sourceData.length);
+
 let productSelect = document.getElementById('product-radio-wrapper');
 let regionSelect = document.getElementById('region-radio-wrapper');
 let tableWrapper = document.getElementById('table-wrapper');
