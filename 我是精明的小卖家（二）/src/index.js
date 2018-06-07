@@ -1,3 +1,7 @@
+﻿import {
+    sourceData
+} from './data.js';
+
 let productSelect = document.getElementById('product-radio-wrapper');
 let regionSelect = document.getElementById('region-radio-wrapper');
 let tableWrapper = document.getElementById('table-wrapper');
@@ -157,3 +161,4 @@ createCheckBox(productSelect, [{
         text: '智能音箱'
     }
 ]);
+export {render, getData};

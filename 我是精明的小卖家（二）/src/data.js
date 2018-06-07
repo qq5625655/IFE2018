@@ -1,4 +1,4 @@
-let sourceData = [{
+﻿let sourceData = [{
     product: "手机",
     region: "华东",
     sale: [120, 100, 140, 160, 180, 185, 190, 210, 230, 245, 255, 270]
@@ -35,3 +35,4 @@ let sourceData = [{
     region: "华南",
     sale: [10, 40, 10, 6, 5, 6, 8, 6, 6, 6, 7, 26]
 }];
+export {sourceData};

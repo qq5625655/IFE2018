@@ -1,3 +1,5 @@
+import {barLine} from './barLine.js';
+import {sourceData} from './data.js';
 function getTableData() {
     let tableWrapper = document.getElementById('table-wrapper');
     let body = document.getElementsByTagName('body')[0];
@@ -26,7 +28,7 @@ function getTableData() {
                 return;
             }
             for (let i = 0; i < sourceData.length; i++) {
-                for (j = 0; j < sourceData.length; j++) {
+                for (let j = 0; j < sourceData.length; j++) {
                     if (sourceData[i]['region'] === data[0] && sourceData[i]['product'] === data[1]) {
                         data = sourceData[i].sale;
                     }
@@ -38,8 +40,9 @@ function getTableData() {
     }
     body.onmouseover = function (e) {
         if (e.target.nodeName !== 'TD') {
-            barLine.drawLines();
+            barLine.drawManyLines();
         }
     }
 
 }
+export {getTableData};
