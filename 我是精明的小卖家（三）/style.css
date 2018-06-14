@@ -75,6 +75,17 @@
     display: block;
 }
 
+#table-wrapper table td:hover {
+    background: url(pencil.svg) no-repeat;
+    background-position: 0% 0%;
+    background-size: 20px;
+}
+
+#table-wrapper table td[rowspan]:hover,
+#table-wrapper table td[td-sign]:hover {
+    background: none;
+}
+
 #confirm,
 #cancel {
     float: left;

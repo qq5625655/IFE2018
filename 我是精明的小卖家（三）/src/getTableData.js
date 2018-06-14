@@ -3,8 +3,6 @@
 function getTableData() {
     let tableWrapper = document.getElementById('table-wrapper');
     let body = document.getElementsByTagName('body')[0];
-    //计数器，只能修改一个单元格
-    // let isTrue = true;
     tableWrapper.onmouseover = function (e) {
         if (e.target.nodeName === 'TD') {
             let data = [];
@@ -50,15 +48,11 @@ function getTableData() {
     tableWrapper.addEventListener('click', function (e) {
         //设置互斥条件
         let isTrue = LocalStorage.mutex();
-        if (isNaN(e.target.textContent) === false && isTrue === true) {
+        if (isNaN(e.target.textContent) === false && isTrue === true && e.target.textContent !== '') {
             let value = e.target.textContent;
             e.target.innerHTML = '<td><input id="inputNum" value=' + value +
                 '><button id="confirm">确认</button><button id="cancel">取消</button>';
-
-            LocalStorage.setData();
-
             LocalStorage.buttonClick();
-
         }
     });
 

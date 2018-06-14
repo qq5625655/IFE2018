@@ -80,11 +80,10 @@ function render() {
         for (let j = 0; j < data[i].sale.length; j++) {
             let value = localStorage.getItem('data' + i + j);
             if (value) {
-                text += '<td>' + value + '<i class="icon ion-edit"></i></td>';
+                text += '<td>' + value + '</td>';
             } else {
                 text += '<td>' + data[i].sale[j] + '</td>';
             }
-
         }
         text += '</tr>';
     }
