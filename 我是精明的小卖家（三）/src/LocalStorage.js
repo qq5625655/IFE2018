@@ -45,7 +45,13 @@ let LocalStorage = {
         });
         body.addEventListener('click', function (e) {
             if (e.target.nodeName !== 'TD' && e.target.id !== "inputNum" && e.target.nodeName !== "BUTTON" && e.target.nodeName !== 'I') {
-                parsent.innerHTML = '<td>' + value + '</td>';
+
+                if (LocalStorage.mutex()) {
+                    parsent.innerHTML = '<td>' + parsent.textContent + '</td>';
+
+                } else {
+                    parsent.innerHTML = '<td>' + value + '</td>';
+                }
             }
         });
         input.addEventListener('keydown', function (e) {
