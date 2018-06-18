@@ -11,11 +11,11 @@ function getData() {
     let regionValue = [];
     let productValue = [];
     let hashData = getHash();
-    // if (location.hash === '') {
-    //     regionValue = selectValue(regionSelect);
-    //     productValue = selectValue(productSelect);
-    // }
-    // else {
+    if (location.hash === '') {
+        regionValue = selectValue(regionSelect);
+        productValue = selectValue(productSelect);
+    }
+    else {
     for (let i = 0; i < hashData.length; i++) {
         if (['华东', '华北', '华南'].indexOf(hashData[i]) !== -1) {
             regionValue.push(hashData[i]);
@@ -23,7 +23,7 @@ function getData() {
             productValue.push(hashData[i]);
         }
     }
-    // }
+    }
     let data = [];
     for (let i = 0; i < sourceData.length; i++) {
         for (let j = 0; j < regionValue.length; j++) {
@@ -60,6 +60,12 @@ function render() {
     //根据长度来进行表格合并
     let regionLength,
         productLength;
+
+    let value = hrefValue() || '';
+    if (value === '') {
+        regionLength = selectValue(regionSelect).length;
+        productLength = selectValue(productSelect).length;
+    } else {
         for (let i = 0; i < hashData.length; i++) {
             if (['华东', '华北', '华南'].indexOf(hashData[i]) !== -1) {
                 region.push(hashData[i]);
@@ -69,38 +75,12 @@ function render() {
         }
         regionLength = region.length;
         productLength = product.length;
-        data = getData();
-        //获取href？后的值
-    let value = hrefValue();
- 
-    if (value !== '') {
-        let regionInput = document.getElementById('region-radio-wrapper').getElementsByTagName('input');
-        let productInput = document.getElementById('product-radio-wrapper').getElementsByTagName('input');
-        for (let i = 0; i < regionInput.length; i++) {
-            if (region.indexOf(regionInput[i].value) !== -1) {
-                regionInput[i].checked = true;
-            } else {
-                regionInput[i].checked = false;
-            }
-        }
 
-        for (let i = 0; i < productInput.length; i++) {
-            if (product.indexOf(productInput[i].value) !== -1) {
-                productInput[i].checked = true;
-            } else {
-                productInput[i].checked = false;
-            }
-        }
-        hashAllcheck();
     }
-    // let value = hrefValue();
-    // if (value === '') {
-    //     regionLength = selectValue(regionSelect).length;
-    //     productLength = selectValue(productSelect).length;
-    // }  
-    // else {
 
-    // }
+    data = getData();
+
+
 
     let text = '';
     let rowSpan = 0;
@@ -151,6 +131,29 @@ function render() {
     }
     text += '</tr></table>';
     tableWrapper.innerHTML = text;
+    //获取href？后的值
+    // let value = hrefValue();
+
+    if (value !== '') {
+        let regionInput = document.getElementById('region-radio-wrapper').getElementsByTagName('input');
+        let productInput = document.getElementById('product-radio-wrapper').getElementsByTagName('input');
+        for (let i = 0; i < regionInput.length; i++) {
+            if (region.indexOf(regionInput[i].value) !== -1) {
+                regionInput[i].checked = true;
+            } else {
+                regionInput[i].checked = false;
+            }
+        }
+
+        for (let i = 0; i < productInput.length; i++) {
+            if (product.indexOf(productInput[i].value) !== -1) {
+                productInput[i].checked = true;
+            } else {
+                productInput[i].checked = false;
+            }
+        }
+        hashAllcheck();
+    }
 
 
 }
@@ -251,7 +254,11 @@ function setHash() {
 
 
 function getHash() {
-    let value = hrefValue();
+
+    let value = hrefValue() || '';
+    if (value === '') {
+        return;
+    }
     let stringArray = ['华东', '华南', '华北', '手机', '笔记本', '智能音箱'];
     let data = [];
     //进行编码
@@ -291,7 +298,7 @@ createCheckBox(productSelect, [{
         text: '智能音箱'
     }
 ]);
-window.onpopstate = function() {
+window.onpopstate = function () {
     render();
 }
 // export {render, getData};
