@@ -10,8 +10,6 @@
 </head>
 
 <body>
-    <button id="seat">顾客入座</button>
-    <button id="leave">顾客离开</button>
     <script>
         'use strict'
         //ES5
@@ -38,7 +36,7 @@
             this.name = name;
             this.salary = salary;
         }
-        Clerk.prototype.finish = function (type) {
+        Clerk.prototype.finish = function () {
             console.log('完成工作了！');
         }
 
@@ -55,7 +53,8 @@
             //如果参数是个数组，则记录客人点菜，如果参数不是数组则是上菜行为
             Waiter.prototype.work = function (value) {
                 if (Array.isArray(value)) {
-                    console.log('客人点菜了，我要快给大厨报菜名！');
+
+                    console.log('客人点了' + value[0].name + '，我要快给大厨报菜名！');
                     return value;
                 } else {
                     console.log('您要的' + value + '好了，您慢用！');
@@ -79,11 +78,9 @@
 
             }
             extend(Cook, Clerk);
-            Cook.prototype.work = function (array) {
-                let string = '';
+            Cook.prototype.work = function (string) {
                 console.log('厨师开始做菜了！');
-                return string;
-
+                console.log('厨师做的' + string + '好了！');
             }
             return {
                 getInstance: function (id, name, salary) {
@@ -99,43 +96,29 @@
         function Customer(name) {
             this.name = name;
         }
-        //吃
-        Customer.prototype.eat = function () {
-            console.log('吃吃吃吃！！');
-            console.log('吃完了！');
-        }
-        //点菜
-        Customer.prototype.order = function () {
-            let c = document.getElementById('menu');
-            let name, price;
-            let array = [];
-            console.log('你看，你吃什么菜，我们这有红烧肉、小酥肉、蒸熊掌！');
-            c.onclick = function (e) {
-                let text = e.target.innerHTML;
-                for (let i = 0; i < menuArray.length; i++) {
-                    if (menuArray[i].name === text) {
-                        price = menuArray[i].price;
-                    }
-                }
-                console.log('好勒，您选了' + text + '  价格：' + price);
-                array.push(text);
-                let menu = waiter.work(array);
-                let string = cook.work(menu);
-                waiter.work(string);
+        Customer.prototype = {
+            constructor: Customer,
+            eat: function () {
+                console.log('吃吃吃吃！！');
+                console.log('吃完 了！');
+            },
+            order: function () { //点菜
+
+                console.log('你看，你吃什么菜，我们这有红烧肉、小酥肉、蒸熊掌！');
+                return Math.floor(Math.random() * 3);
+            },
+            seat: function () {
+                ifeRestaurant.seats--;
+                console.log('顾客' + this.name + '入座了！');
+                console.log('当前座位为：0');
+            },
+            leave: function (array) {
+
+                console.log('顾客' + this.name + '走了！');
+                array.shift();
+                ifeRestaurant.seats++;
+                console.log('-----------分割线----------');
             }
-
-
-        }
-
-        Customer.prototype.seat = function () {
-            ifeRestaurant.seats--;
-            console.log('顾客' + this.name + '入座了！');
-            console.log('当前座位为：0');
-        }
-        Customer.prototype.leave = function () {
-            console.log('顾客' + this.name + '走了！');
-            customerArray.shift();
-            ifeRestaurant.seats++;
         }
 
         //菜单
@@ -146,7 +129,6 @@
         }
         Menu.prototype = {
             constructor: Menu,
-
         }
         //空对象作为中介
         function extend(Child, Parent) {
@@ -158,66 +140,77 @@
 
         //运行控制流程
         function init() {
-            seatButton.onclick = function () {
-                if (ifeRestaurant.seats === 19) {
-                    console.log('抱歉，我们的座位满了，您看您等一等？');
-                    return;
-                }
-                if (customerArray[0] === undefined) {
-                    console.log('对不起，没有顾客了！');
-                    return;
-                }
-                let cus = customerArray[0];
+            let cusArray = instanceCus();
+            let menu = instanceMenu();
+            let index = 0;
+            let array = [];
+            let timer = setInterval(function () {
+                let cus = cusArray[0];
+                //顾客入座
                 cus.seat();
-                cus.order();
-            }
-
-            leaveButton.onclick = function () {
-                let cus = customerArray[0];
-                cus.leave();
-
-            }
-            //菜名
-            let dom = '';
-            for (let i = 0; i < menuArray.length; i++) {
-                dom += '<button>' + menuArray[i].name + '</button>';
-            }
-            let menuButton = document.createElement('div');
-            menuButton.id = 'menu';
-            menuButton.innerHTML = dom;
-            document.getElementsByTagName('body')[0].appendChild(menuButton);
+                //顾客点菜
+                let menuIndex = cus.order();
+                //服务员拿到点菜名单
+                array.push(menu[menuIndex]);
+                waiter.work(array);
+                //大厨做菜
+                cook.work(menu[menuIndex].name);
+                //服务员上菜
+                waiter.work(menu[menuIndex].name);
+                //顾客吃菜
+                cus.eat();
+                //顾客离开
+                cus.leave(cusArray);
+                if (index === 2) {
+                    clearInterval(timer);
+                }
+                index++;
+            }, 1000)
 
         }
         //构造实例
+        function instanceCus() {
+            let array = ['Tom', 'Tony', 'Robin'];
+            let customerArray = [];
+            for (let i = 0; i < array.length; i++) {
+                customerArray.push(new Customer(array[i]));
+            }
+            return customerArray;
+        }
+        //菜单实例
+        function instanceMenu() {
+            let menuArray = [];
+            let menu = [{
+                    name: '红烧肉',
+                    costing: 20,
+                    price: 35
+                },
+                {
+                    name: '小酥肉',
+                    costing: 25,
+                    price: 40
+                },
+                {
+                    name: '蒸熊掌',
+                    costing: 40,
+                    price: 60
+                }
+            ];
+            for (let i = 0; i < menu.length; i++) {
+                menuArray.push(new Menu(menu[i].name, menu[i].costing, menu[i].price));
+            }
+            return menuArray;
+        }
 
-        let customerArray = [];
         let ifeRestaurant = new Restaurant({
             cash: 1000000,
             seats: 20,
             staff: []
         });
-
-
-        let seatButton = document.getElementById('seat');
-        let leaveButton = document.getElementById('leave');
-
-        let Tom = new Customer('Tom');
-        customerArray.push(Tom);
-        let Tony = new Customer('Tony');
-        customerArray.push(Tony);
-        let Robin = new Customer('Robin');
-        customerArray.push(Robin);
-
         let waiter = singletonWaiter.getInstance(1, '小张', 2000); //单例模式下的厨师和服务员
         ifeRestaurant.staff.push(waiter);
         let cook = singletonCook.getInstance(1, '张厨师', 5000);
         ifeRestaurant.staff.push(cook);
-        
-        //菜单
-        let hongshaorou = new Menu('红烧肉', 20, 35);
-        let xiaosurou = new Menu('小酥肉', 15, 30);
-        let zhengxiongzhang = new Menu('蒸熊掌', 35, 59);
-        let menuArray = [hongshaorou, xiaosurou, zhengxiongzhang];
 
         init();
     </script>
